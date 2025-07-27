@@ -1,5 +1,5 @@
 # Use official Node.js LTS image as the base
-FROM node:20-alpine AS builder
+FROM node:24.3-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Production image
-FROM node:20-alpine AS production
+FROM node:24.3-alpine AS production
 WORKDIR /app
 
 # Copy only necessary files from builder
