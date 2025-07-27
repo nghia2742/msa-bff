@@ -4,28 +4,27 @@ FROM node:24.3-alpine AS builder
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Install dependencies only when package.json or yarn.lock changes
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-# Copy the rest of the source code
+# Copy source files
 COPY . .
 
-# Build the application
-RUN npm run build
+# Build the project
+RUN yarn build
 
 # Production image
 FROM node:24.3-alpine AS production
 WORKDIR /app
 
-# Copy only necessary files from builder
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/dist ./dist
-
-# Install only production dependencies
-RUN npm ci --only=production --legacy-peer-deps
+# Copy only necessary files from builder stage
+COPY --from=builder /app/package.json /app/yarn.lock ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
 
 # Expose port (default NestJS port)
 EXPOSE 4000
 
 # Start the application
-CMD ["node", "dist/main.js"]
+CMD ["yarn", "start"]
