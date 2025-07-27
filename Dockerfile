@@ -27,4 +27,4 @@ COPY --from=builder /app/node_modules ./node_modules
 EXPOSE 4000
 
 # Start the application
-CMD ["yarn", "start"]
+CMD ["node", "dist/main.js"]

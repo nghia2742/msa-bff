@@ -15,7 +15,7 @@ import { ProductResolver } from './product.resolver';
         options: {
           url: '0.0.0.0:5000',
           package: 'product_service',
-          protoPath: join(__dirname, '../../proto/product.proto'),
+          protoPath: join(__dirname, '../product.proto'),
         },
       },
     ]),
